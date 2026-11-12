@@ -35,8 +35,10 @@
    if(s.advice.length||s.extra){rule();for(const a of s.advice)text('• '+a,{size:fs,gap:1});if(s.extra)text(s.extra,{size:fs,gap:1});}
   }
   const date=new Date(s.date+'T12:00:00'),dateText=Number.isFinite(date.getTime())?new Intl.DateTimeFormat('th-TH',{day:'numeric',month:'short',year:'numeric'}).format(date):'';
-  rule();text((s.sample?'ตัวอย่าง • ไม่ใช่ใบสั่งยา':'ภาพไม่ใช่ขนาดจริง · ใช้ยาตามใบสั่ง')+(wide?' · '+dateText:''),{size:12,center:true,gap:0});
-  if(!wide&&dateText)text(dateText,{size:12,center:true,gap:0});if(s.clinic)text(s.clinic,{size:14,center:true,gap:0});
+  const note=s.sample?'ตัวอย่าง • ไม่ใช่ใบสั่งยา':'ภาพไม่ใช่ขนาดจริง · ใช้ยาตามใบสั่ง';
+  rule();
+  if(wide){text([note,dateText,s.clinic].filter(Boolean).join(' · '),{size:12,center:true,gap:0});}
+  else{text(note,{size:12,center:true,gap:0});if(dateText)text(dateText,{size:12,center:true,gap:0});if(s.clinic)text(s.clinic,{size:14,center:true,gap:0});}
   const naturalHeight=(y+p)/PX,overflow=naturalHeight>s.height+.01;
   const makeSVG=(preview=false)=>{const ph=preview&&overflow?Math.max(h,y+p):h;return `<svg xmlns="http://www.w3.org/2000/svg" width="${s.width}mm" height="${ph/PX}mm" viewBox="0 0 ${w} ${ph}" role="img" aria-label="สติกเกอร์มื้อ${esc(m.name)}" style="font-family:Tahoma,Arial,sans-serif;background:white"><rect width="100%" height="100%" fill="white"/><g fill="black">${parts.join('')}</g>${preview&&overflow?`<line x1="0" x2="${w}" y1="${h}" y2="${h}" stroke="#bc3030" stroke-width="2" stroke-dasharray="6 4"/>`:''}</svg>`;};
   return {name:m.name,id:m.id,width:s.width,height:s.height,naturalHeight,overflow,svg:makeSVG(),preview:makeSVG(true)};
